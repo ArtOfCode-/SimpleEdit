@@ -16,7 +16,7 @@ SimpleEdit is a text editor that replaces Windows' Notepad. It's significantly b
 In short, if you hate Notepad (or have cause to use it frequently), you should be using this instead.
 
 ## Installation
-Simple: go to the [install folder](https://github.com/ArtOfCode-/SimpleEdit/install) and download the .zip file. Extract its contents, and run SimpleEdit.exe. Job done.
+Simple: go to the [install folder](https://github.com/ArtOfCode-/SimpleEdit/tree/master/install) and download the .zip file. Extract its contents, and run SimpleEdit.exe. Job done.
 
 SimpleEdit doesn't rely on system-wide configuration, so can be run from any file location - even on USB.
 
