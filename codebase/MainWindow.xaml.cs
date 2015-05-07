@@ -219,7 +219,11 @@ namespace SimpleEdit
         {
             if (FormatMenuWrap.IsChecked)
             {
-
+                EditBox.TextWrapping = TextWrapping.Wrap;
+            }
+            else
+            {
+                EditBox.TextWrapping = TextWrapping.NoWrap;
             }
         }
 
