@@ -1,0 +1,49 @@
+﻿<Window x:Class="SimpleEdit.FindReplaceDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+        Title="Find &amp; Replace" Height="200" Width="300"
+        Background="LightGray">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Find">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="79" />
+                        <ColumnDefinition Width="221" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0">Find the text:</Label>
+                    <TextBox Name="FindTextToFind" Grid.Row="0" Grid.Column="1" Margin="3" Padding="3"></TextBox>
+                    <Button HorizontalAlignment="Right" Name="FindSubmit" Content="Find" Padding="5" Grid.Row="2" Grid.Column="1" Click="Find_Click" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Replace">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="79" />
+                        <ColumnDefinition Width="221" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0">Find the text:</Label>
+                    <TextBox Name="ReplaceTextToFind" Grid.Row="0" Grid.Column="1" Margin="3" Padding="3"></TextBox>
+                    <Label Grid.Row="1" Grid.Column="0">Replace with:</Label>
+                    <TextBox Name="ReplaceReplaceWith" Grid.Row="1" Grid.Column="1" Margin="3" Padding="3"></TextBox>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3" Grid.Column="1">
+                        <Button Name="ReplaceSubmit" Content="Replace" Padding="5 0" Margin="2" Click="ReplaceSubmit_Click" />
+                        <Button Name="ReplaceAllSubmit" Content="Replace All" Padding="5 0" Margin="2" Click="ReplaceAllSubmit_Click" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
