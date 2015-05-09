@@ -24,7 +24,9 @@ namespace SimpleEdit.Tools
                 { PreferenceType.FontSize, "cfg?EditBox/Font:Size" },
                 { PreferenceType.ColorsForeground, "cfg?EditBox/Colors:Foreground" },
                 { PreferenceType.ColorsBackground, "cfg?EditBox/Colors:Background" },
-                { PreferenceType.FormatTextWrap, "cfg?EditBox/Format:TextWrapping" }
+                { PreferenceType.FormatTextWrap, "cfg?EditBox/Format:TextWrapping" },
+                { PreferenceType.FormatTabLength, "cfg?EditBox/NoProperty/Format:TabLength" },
+                { PreferenceType.FormatPreserveIndents, "cfg?EditBox/NoProperty/Format:PreserveIndents" }
             };
 
         private Dictionary<string, string> propertyMappings = new Dictionary<string, string>
@@ -33,7 +35,7 @@ namespace SimpleEdit.Tools
                 { "cfg?EditBox/Font:Size", "FontSizeProperty" },
                 { "cfg?EditBox/Colors:Foreground", "ForegroundProperty" },
                 { "cfg?EditBox/Colors:Background", "BackgroundProperty" },
-                { "cfg?EditBox/Format:TextWrap", "TextWrappingProperty" }
+                { "cfg?EditBox/Format:TextWrapping", "TextWrappingProperty" }
             };
 
         private Dictionary<string, Type> propertyTypes = new Dictionary<string, Type>
@@ -61,12 +63,36 @@ namespace SimpleEdit.Tools
             LoadPreferences();
             ApplyPreferences();
         }
+        public Preferences(Program program, MainWindow window, string[] initialPreferences)
+        {
+            if (program == null)
+            {
+                throw new ArgumentNullException("program");
+            }
+            _program = program;
+            _window = window;
+            preferencesFile = ApplicationFiles.GetFilePath(_program.WorkingDirectory, ApplicationFiles.UserConfig);
+            currentPreferences = new Dictionary<string, string>();
+            element = _window.EditBox;
+            LoadPreferences(initialPreferences);
+            ApplyPreferences();
+        }
 
         private void LoadPreferences()
         {
             string[] fileContents = File.ReadAllLines(preferencesFile);
             foreach (string line in fileContents)
             {
+                Console.WriteLine("Read preference: {0}", line);
+                string[] split = line.Split(new char[] { ' ' }, 2);
+                currentPreferences.Add(split[0], split[1]);
+            }
+        }
+        private void LoadPreferences(string[] fileContents)
+        {
+            foreach (string line in fileContents)
+            {
+                Console.WriteLine("Found preference: {0}", line);
                 string[] split = line.Split(new char[] { ' ' }, 2);
                 currentPreferences.Add(split[0], split[1]);
             }
@@ -76,10 +102,14 @@ namespace SimpleEdit.Tools
         {
             foreach (KeyValuePair<string, string> pair in currentPreferences)
             {
+                if (pair.Key.Contains("NoProperty"))
+                {
+                    continue;
+                }
                 UniversalValueConverter converter = new UniversalValueConverter();
                 object value;
                 try
-                {
+                {                    
                     value = converter.Convert(pair.Value, propertyTypes[propertyMappings[pair.Key]]);
                     Dependencies.SetDependencyProperty(element, propertyMappings[pair.Key], value);
                 }
@@ -108,7 +138,16 @@ namespace SimpleEdit.Tools
 
         public string GetPreference(PreferenceType preference)
         {
-            return currentPreferences[preferenceMappings[preference]];
+            string value;
+            try
+            {
+                value = currentPreferences[preferenceMappings[preference]];
+            }
+            catch (KeyNotFoundException)
+            {
+                value = null;
+            }
+            return value;
         }
 
         private void SavePreferences()
@@ -136,6 +175,8 @@ namespace SimpleEdit.Tools
         FontSize,
         ColorsForeground,
         ColorsBackground,
-        FormatTextWrap
+        FormatTextWrap,
+        FormatTabLength,
+        FormatPreserveIndents
     }
 }

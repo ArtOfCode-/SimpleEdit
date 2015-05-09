@@ -50,6 +50,10 @@ namespace SimpleEdit.Tools
             {
                 SetupFirstRun();
             }
+            else
+            {
+                _window.Preferences = new Preferences(this, _window);
+            }
             ParseCommandLineArgs();
         }
 
@@ -60,14 +64,17 @@ namespace SimpleEdit.Tools
 
         private void SetupFirstRun()
         {
-            File.WriteAllLines(ApplicationFiles.GetFilePath(WorkingDirectory, ApplicationFiles.UserConfig),
-                new string[] {
+            string[] lines = new string[] {
                     "cfg?EditBox/Font:Family Consolas",
                     "cfg?EditBox/Font:Size 12",
                     "cfg?EditBox/Colors:Foreground Black",
                     "cfg?EditBox/Colors:Background White",
-                    "cfg?EditBox/Format:TextWrap Wrap",
-                });
+                    "cfg?EditBox/Format:TextWrapping Wrap",
+                    "cfg?EditBox/NoProperty/Format:TabLength 4",
+                    "cfg?EditBox/NoProperty/Format:PreserveIndents True"
+                };
+            File.WriteAllLines(ApplicationFiles.GetFilePath(WorkingDirectory, ApplicationFiles.UserConfig), lines);
+            _window.Preferences = new Preferences(this, _window, lines);
         }
 
         private void ParseCommandLineArgs()
@@ -77,7 +84,6 @@ namespace SimpleEdit.Tools
             string[] args = arguments.ToArray<string>();
             if (_window.IsLoaded && _window.IsInitialized)
             {
-                Console.WriteLine("loaded and initialized first run");
                 if (args[0] != null && File.Exists(args[0]))
                 {
                     OpenFile.Open(args[0]);
@@ -85,7 +91,6 @@ namespace SimpleEdit.Tools
             }
             else
             {
-                Console.WriteLine("starting thread");
                 Thread parseThread = new Thread(new ParameterizedThreadStart(ParseArgsThread));
                 parseThread.Start((object)args);
             }
@@ -93,7 +98,6 @@ namespace SimpleEdit.Tools
 
         private void ParseArgsThread(object arguments)
         {
-            Console.WriteLine("thread started");
             string[] args = (string[])arguments;
             bool isLoaded = false;
             bool isInitialized = false;
@@ -104,7 +108,6 @@ namespace SimpleEdit.Tools
             }));
             while (!isLoaded || !isInitialized)
             {
-                Console.WriteLine("not ready yet");
                 Thread.Sleep(100);
                 _window.Dispatcher.BeginInvoke(new Action(delegate()
                 {
@@ -114,12 +117,7 @@ namespace SimpleEdit.Tools
             }
             if (args.Length > 0 && File.Exists(args[0]))
             {
-                Console.WriteLine("ready, invoking");
                 OpenFile.InvokeOpen(args[0]);
-            }
-            else
-            {
-                Console.WriteLine("no args to parse");
             }
         }
     }

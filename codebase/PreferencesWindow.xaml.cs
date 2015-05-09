@@ -36,6 +36,8 @@ namespace SimpleEdit
             BackgroundPicker.SelectedColor = (Color)converter.Convert((object)_preferences["cfg?EditBox/Colors:Background"], typeof(Color));
             FontPicker.SelectedItem = (FontFamily)converter.Convert((object)_preferences["cfg?EditBox/Font:Family"], typeof(FontFamily));
             FontSizeInput.Text = _preferences["cfg?EditBox/Font:Size"];
+            TabLengthInput.Text = _preferences["cfg?EditBox/NoProperty/Format:TabLength"];
+            PreserveIndents.IsChecked = (_preferences["cfg?EditBox/NoProperty/Format:PreserveIndents"] == "True");
         }
 
         private void ApplyPrefs(object sender, RoutedEventArgs e)
@@ -44,7 +46,10 @@ namespace SimpleEdit
                 new KeyValuePair<PreferenceType, string>(PreferenceType.ColorsBackground, BackgroundPicker.SelectedColor.ToString()),
                 new KeyValuePair<PreferenceType, string>(PreferenceType.ColorsForeground, ForegroundPicker.SelectedColor.ToString()),
                 new KeyValuePair<PreferenceType, string>(PreferenceType.FontFamily, FontPicker.SelectedItem.ToString()),
-                new KeyValuePair<PreferenceType, string>(PreferenceType.FontSize, FontSizeInput.Text)
+                new KeyValuePair<PreferenceType, string>(PreferenceType.FontSize, FontSizeInput.Text),
+                new KeyValuePair<PreferenceType, string>(PreferenceType.FormatPreserveIndents, 
+                    (PreserveIndents.IsChecked == true ? "True" : "False")),
+                new KeyValuePair<PreferenceType, string>(PreferenceType.FormatTabLength, TabLengthInput.Text)
             );
         }
 

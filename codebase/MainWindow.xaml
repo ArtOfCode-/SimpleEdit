@@ -40,7 +40,7 @@
 
         <TextBox Name="EditBox" AcceptsReturn="True" AcceptsTab="True" Height="405" Width="800" Margin="0" TextWrapping="Wrap"
                  Grid.Row="1" Grid.Column="0" BorderThickness="0" Padding="3" FontSize="12" FontFamily="Consolas"
-                 PreviewKeyDown="EditBoxPreviewKeyDown" KeyUp="EditBox_Up" MouseLeftButtonUp="EditBox_Up"
+                 PreviewKeyDown="EditBoxPreviewKeyDown" KeyUp="EditBox_Up" PreviewMouseUp="EditBox_MouseUp"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
 
         <StatusBar Name="Status" Grid.Row="2" Grid.Column="0" Background="DodgerBlue" Foreground="White">

@@ -31,7 +31,9 @@ namespace SimpleEdit
 
         private Program program;
 
-        private Preferences _preferences;
+        public Preferences Preferences;
+
+        private int EditingColumn = 0;
 
         // Entry point
         public MainWindow()
@@ -39,7 +41,6 @@ namespace SimpleEdit
             this.Closing += MainWindow_Closing;
             InitializeComponent();
             program = new Program(this);
-            _preferences = new Preferences(program, this);
             EditBox.Focus();
             OpenFile.Initialize(this);
             FileMenuControls.Initialize(this);
@@ -55,7 +56,6 @@ namespace SimpleEdit
         {
             SizeChangeRatio heightRatio = new SizeChangeRatio(e.PreviousSize.Height, e.NewSize.Height);
             SizeChangeRatio widthRatio = new SizeChangeRatio(e.PreviousSize.Width, e.NewSize.Width);
-            // Console.WriteLine("Size changed: height * {0}, width * {1}", heightRatio.GetRatio(), widthRatio.GetRatio());
             foreach (UIElement element in Container.Children)
             {
                 FrameworkElement fElement = (FrameworkElement)element;
@@ -68,23 +68,28 @@ namespace SimpleEdit
         {
             if (e.Key == Key.Tab)
             {
-                string tab = new string(' ', 4);
+                int tabLength = Convert.ToInt32(Preferences.GetPreference(PreferenceType.FormatTabLength));
                 int caretPosition = EditBox.CaretIndex;
-                EditBox.Text = EditBox.Text.Insert(caretPosition, tab);
-                EditBox.CaretIndex = caretPosition + 4;
+                int column = EditingColumn;
+                int spacesToNextTabPosition = (column % tabLength == 0 ? tabLength : tabLength - (column % tabLength));
+                EditBox.Text = EditBox.Text.Insert(caretPosition, new string(' ', spacesToNextTabPosition));
+                EditBox.CaretIndex = caretPosition + spacesToNextTabPosition;
                 OpenFile.SetSaved(false);
                 e.Handled = true;
             }
             else if (e.Key == Key.Enter)
             {
-                int caretPosition = EditBox.CaretIndex;
-                int lineIndex = EditBox.GetLineIndexFromCharacterIndex(caretPosition);
-                string lineContent = EditBox.GetLineText(lineIndex);
-                int whiteSpace = GetLeadingWhiteSpaceLength(lineContent);
-                EditBox.Text = EditBox.Text.Insert(caretPosition, "\r\n" + new string(' ', whiteSpace));
-                EditBox.CaretIndex = caretPosition + whiteSpace + 2;
-                OpenFile.SetSaved(false);
-                e.Handled = true;
+                if (Preferences.GetPreference(PreferenceType.FormatPreserveIndents) == "True")
+                {
+                    int caretPosition = EditBox.CaretIndex;
+                    int lineIndex = EditBox.GetLineIndexFromCharacterIndex(caretPosition);
+                    string lineContent = EditBox.GetLineText(lineIndex);
+                    int whiteSpace = GetLeadingWhiteSpaceLength(lineContent);
+                    EditBox.Text = EditBox.Text.Insert(caretPosition, "\r\n" + new string(' ', whiteSpace));
+                    EditBox.CaretIndex = caretPosition + whiteSpace + 2;
+                    OpenFile.SetSaved(false);
+                    e.Handled = true;
+                }
             }
             else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
@@ -187,11 +192,22 @@ namespace SimpleEdit
             }
         }
 
-        private void EditBox_Up(object sender, EventArgs e)
+        private void EditBox_Up(object sender, KeyEventArgs e)
         {
             int caretPosition = EditBox.CaretIndex;
             int lineIndex = EditBox.GetLineIndexFromCharacterIndex(caretPosition);
             int column = caretPosition - EditBox.GetCharacterIndexFromLineIndex(lineIndex);
+            EditingColumn = column;
+            CursorLine.Content = "Ln " + (lineIndex + 1).ToString(CultureInfo.CurrentCulture);
+            CursorCol.Content = "Col " + column;
+        }
+
+        private void EditBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            int caretPosition = EditBox.CaretIndex;
+            int lineIndex = EditBox.GetLineIndexFromCharacterIndex(caretPosition);
+            int column = caretPosition - EditBox.GetCharacterIndexFromLineIndex(lineIndex);
+            EditingColumn = column;
             CursorLine.Content = "Ln " + (lineIndex + 1).ToString(CultureInfo.CurrentCulture);
             CursorCol.Content = "Col " + column;
         }
@@ -220,16 +236,18 @@ namespace SimpleEdit
             if (FormatMenuWrap.IsChecked)
             {
                 EditBox.TextWrapping = TextWrapping.Wrap;
+                Preferences.SetPreference(PreferenceType.FormatTextWrap, "Wrap");
             }
             else
             {
                 EditBox.TextWrapping = TextWrapping.NoWrap;
+                Preferences.SetPreference(PreferenceType.FormatTextWrap, "NoWrap");
             }
         }
 
         private void FormatMenuPrefs_Click(object sender, RoutedEventArgs e)
         {
-            _preferences.ManagePreferencesWindow();
+            Preferences.ManagePreferencesWindow();
         }
     }
 }
