@@ -1,4 +1,21 @@
-﻿using System;
+﻿/* SimpleEdit - Windows Notepad replacement text editor
+Copyright (C) 2015 Owen Jenkins
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/copyleft/gpl.html>. */
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,6 +51,16 @@ namespace SimpleEdit
         public Preferences Preferences;
 
         private int EditingColumn = 0;
+
+        private Dictionary<string, string> _additionStrings = new Dictionary<string, string>
+        {
+            { "ItemBold", "**text**" },
+            { "ItemItalic", "*text*" },
+            { "ItemBulletList", "- text" },
+            { "ItemLink", "[{text}]({url})" },
+            { "ItemImage", "![{alt}]({url})" },
+            { "ItemCode", "    " }
+        };
 
         // Entry point
         public MainWindow()
@@ -248,6 +275,82 @@ namespace SimpleEdit
         private void FormatMenuPrefs_Click(object sender, RoutedEventArgs e)
         {
             Preferences.ManagePreferencesWindow();
+        }
+
+        private void MarkdownMode_Click(object sender, RoutedEventArgs e)
+        {
+            if (MDToolMenu.Visibility == Visibility.Collapsed)
+            {
+                MDToolMenu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MDToolMenu.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void AdditionItem_Click(object sender, RoutedEventArgs e)
+        {
+            string addition = _additionStrings[((FrameworkElement)sender).Name];
+            int caretIndex = EditBox.CaretIndex;
+            if (EditBox.SelectedText.Length > 1)
+            {
+                int selectionStart = EditBox.SelectionStart;
+                int selectionLength = EditBox.SelectionLength;
+                addition = addition.Replace("text", EditBox.SelectedText);
+                string text = EditBox.Text.Remove(selectionStart, selectionLength);
+                EditBox.Text = text.Insert(selectionStart, addition);
+                EditBox.CaretIndex = caretIndex + addition.Length;
+            }
+            else
+            {
+                EditBox.Text = EditBox.Text.Insert(EditBox.CaretIndex, addition);
+                EditBox.CaretIndex = caretIndex + addition.Length;
+            }
+        }
+
+        private void ItemImage_Click(object sender, RoutedEventArgs e)
+        {
+            MDInsertDialog dialog = new MDInsertDialog("Alt text:", "Image URL:");
+            int caretIndex = EditBox.CaretIndex;
+            if (EditBox.SelectedText.Length > 1)
+            {
+                int selectionStart = EditBox.SelectionStart;
+                int selectionLength = EditBox.SelectionLength;
+                dialog.FirstInput.Text = EditBox.SelectedText;
+                EditBox.Text = EditBox.Text.Remove(selectionStart, selectionLength);
+            }
+            Nullable<bool> result = dialog.ShowDialog();
+            if (result == true)
+            {
+                string addition = _additionStrings[((FrameworkElement)sender).Name];
+                addition = addition.Replace("{alt}", dialog.FirstInputText);
+                addition = addition.Replace("{url}", dialog.SecondInputText);
+                EditBox.Text = EditBox.Text.Insert(EditBox.CaretIndex, addition);
+                EditBox.CaretIndex = caretIndex + addition.Length;
+            }
+        }
+
+        private void ItemLink_Click(object sender, RoutedEventArgs e)
+        {
+            MDInsertDialog dialog = new MDInsertDialog("Link text:", "URL:");
+            int caretIndex = EditBox.CaretIndex;
+            if (EditBox.SelectedText.Length > 1)
+            {
+                int selectionStart = EditBox.SelectionStart;
+                int selectionLength = EditBox.SelectionLength;
+                dialog.FirstInput.Text = EditBox.SelectedText;
+                EditBox.Text = EditBox.Text.Remove(selectionStart, selectionLength);
+            }
+            Nullable<bool> result = dialog.ShowDialog();
+            if (result == true)
+            {
+                string addition = _additionStrings[((FrameworkElement)sender).Name];
+                addition = addition.Replace("{text}", dialog.FirstInputText);
+                addition = addition.Replace("{url}", dialog.SecondInputText);
+                EditBox.Text = EditBox.Text.Insert(EditBox.CaretIndex, addition);
+                EditBox.CaretIndex = caretIndex + addition.Length;
+            }
         }
     }
 }

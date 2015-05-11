@@ -1,0 +1,40 @@
+﻿<Window x:Class="SimpleEdit.MarkdownToolbar"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Markdown Toolbar" Height="100" Width="300"
+        SizeToContent="WidthAndHeight">
+    <Grid>
+        <Menu Name="MDToolMenu" Height="30" Width="300">
+            <MenuItem Name="ItemBold" Height="30" Width="30" Padding="0" Margin="0" Click="AdditionItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/bold.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemItalic" Height="30" Width="30" Padding="0" Margin="0" Click="AdditionItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/italic.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemBulletList" Height="30" Width="30" Padding="0" Margin="0" Click="AdditionItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/bullet_list.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemLink" Height="30" Width="30" Padding="0" Margin="0" Click="ItemLink_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/link.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemImage" Height="30" Width="30" Padding="0" Margin="0" Click="ItemImage_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/image.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemCode" Height="30" Width="30" Padding="0" Margin="0" Click="AdditionItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/code_span.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+    </Grid>
+</Window>

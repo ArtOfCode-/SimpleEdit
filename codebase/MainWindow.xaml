@@ -1,4 +1,21 @@
-﻿<Window x:Class="SimpleEdit.MainWindow"
+﻿ <!-- SimpleEdit - Windows Notepad replacement text editor
+Copyright (C) 2015 Owen Jenkins
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see<http://www.gnu.org/copyleft/gpl.html> . -->
+
+
+<Window x:Class="SimpleEdit.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         SizeToContent="WidthAndHeight"
@@ -8,6 +25,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="26" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -35,6 +53,7 @@
             <MenuItem Name="FormatMenu" Header="Format" Padding="8 3">
                 <MenuItem Name="FormatMenuWrap" Header="Word Wrap" IsCheckable="True" IsChecked="True" Click="FormatMenuWrap_Click" />
                 <MenuItem Name="FormatMenuPrefs" Header="Preferences" Click="FormatMenuPrefs_Click" />
+                <MenuItem Name="MarkdownMode" Header="Markdown Toolbar" Click="MarkdownMode_Click" />
             </MenuItem>
         </Menu>
 
@@ -43,7 +62,40 @@
                  PreviewKeyDown="EditBoxPreviewKeyDown" KeyUp="EditBox_Up" PreviewMouseUp="EditBox_MouseUp"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
 
-        <StatusBar Name="Status" Grid.Row="2" Grid.Column="0" Background="DodgerBlue" Foreground="White">
+        <Menu Name="MDToolMenu" Grid.Row="2" Visibility="Collapsed">
+            <MenuItem Name="ItemBold" ToolTip="Bold" Height="30" Width="30" Padding="0" Margin="0" Click="AdditionItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/bold.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemItalic" ToolTip="Italic" Height="30" Width="30" Padding="0" Margin="0" Click="AdditionItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/italic.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemBulletList" ToolTip="Bulleted List" Height="30" Width="30" Padding="0" Margin="0" Click="AdditionItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/bullet_list.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemLink" ToolTip="Link" Height="30" Width="30" Padding="0" Margin="0" Click="ItemLink_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/link.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemImage" ToolTip="Image" Height="30" Width="30" Padding="0" Margin="0" Click="ItemImage_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/image.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ItemCode" ToolTip="Code block" Height="30" Width="30" Padding="0" Margin="0" Click="AdditionItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="pack://application:,,,/Assets/code_span.png"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+
+        <StatusBar Name="Status" Grid.Row="3" Grid.Column="0" Background="DodgerBlue" Foreground="White">
             <StatusBarItem Name="ReadyState" Margin="0 0 20 0" Content="Ready" />
             <StatusBarItem Name="CursorLine" Margin="0 0 20 0" Content="Ln 1" />
             <StatusBarItem Name="CursorCol" Margin="0 0 20 0" Content="Col 0" />

@@ -1,0 +1,24 @@
+﻿<Window x:Class="SimpleEdit.MDInsertDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Insert" Height="300" Width="300"
+        SizeToContent="WidthAndHeight">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="200" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <Label Name="FirstInput_Label" Margin="3"></Label>
+            <Label Name="SecondInput_Label" Margin="3"></Label>
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <TextBox Name="FirstInput" Margin="3"></TextBox>
+            <TextBox Name="SecondInput" Margin="3"></TextBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="ButtonOK" Content="OK" Margin="3" Padding="3" Click="ButtonOK_Click"></Button>
+                <Button Name="ButtonCancel" Content="Cancel" Margin="3" Padding="3" Click="ButtonCancel_Click"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
