@@ -37,6 +37,11 @@ namespace SimpleEdit.Tools
         /// <returns>The converted object</returns>
         public object Convert(object value, Type targetType)
         {
+            if (value == null || targetType == null)
+            {
+                throw new ArgumentNullException(value == null ? "value" : "targetType");
+            }
+            
             // obtain the conveter for the target type
             TypeConverter converter = TypeDescriptor.GetConverter(targetType);
 
@@ -50,13 +55,12 @@ namespace SimpleEdit.Tools
                 }
                 else
                 {
-                    // try to convert from the string representation
-                    return converter.ConvertFrom(value.ToString());
+                    throw new NotSupportedException(string.Format("Cannot convert from type {0} to type {1}.", value.GetType(), targetType));
                 }
             }
-            catch (Exception)
+            catch (NotSupportedException nse)
             {
-                return value;
+                throw new NotSupportedException(string.Format("Cannot convert from type {0} to type {1}.", value.GetType(), targetType), nse);
             }
         }
 

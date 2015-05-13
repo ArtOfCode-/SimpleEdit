@@ -23,16 +23,21 @@ using System.Threading.Tasks;
 
 namespace SimpleEdit.Tools
 {
-    class SizeChangeRatio
+    public class SizeChangeRatio
     {
         private double _ratio;
 
-        public SizeChangeRatio(int originalSize, int newSize)
+        public SizeChangeRatio(double originalSize, double newSize)
         {
             _ratio = newSize / originalSize;
         }
 
-        public SizeChangeRatio(double originalSize, double newSize)
+        public void SetRatio(double newRatio)
+        {
+            _ratio = newRatio;
+        }
+
+        public void SetRatioByCalculation(double originalSize, double newSize)
         {
             _ratio = newSize / originalSize;
         }

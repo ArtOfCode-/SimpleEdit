@@ -23,30 +23,34 @@ using System.Threading.Tasks;
 
 namespace SimpleEdit.Tools
 {
-    static class Extensions
+    public static class Extensions
     {
-        public static IEnumerable<int> AllIndexesOf(this string str, string value)
+        public static IEnumerable<int> AllIndexesOf(this string str, string searchText)
         {
-            if (string.IsNullOrEmpty(value))
+            if (str == null || searchText == null)
             {
-                throw new ArgumentException("The string to find should not be empty.", "value");
+                throw new ArgumentNullException(str == null ? "str" : "searchText");
             }
-            for (int index = 0; ; index += value.Length)
+            return AllIndexesOfCore(str, searchText);
+        }
+        private static IEnumerable<int> AllIndexesOfCore(string str, string searchText)
+        {
+            for (int index = 0; ; index += searchText.Length)
             {
-                index = str.IndexOf(value, index);
+                index = str.IndexOf(searchText, index);
                 if (index == -1)
                     break;
                 yield return index;
             }
         }
 
-        public static Int32 CountInstancesOfSubstring(this string str, string searchText)
+        public static int CountInstancesOfSubstring(this string str, string searchText)
         {
             if (searchText == null)
             {
                 throw new ArgumentNullException("searchText");
             }
-            if (String.IsNullOrEmpty(searchText))
+            if (string.IsNullOrEmpty(searchText))
             {
                 throw new ArgumentException("Search text should not be an empty string.");
             }

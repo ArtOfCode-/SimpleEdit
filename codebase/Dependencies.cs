@@ -26,14 +26,18 @@ using System.Reflection;
 
 namespace SimpleEdit.Tools
 {
-    static class Dependencies
+    public static class Dependencies
     {
         public static DependencyProperty GetDependencyPropertyByName(DependencyObject dependencyObject, string dpName)
         {
+            if (dependencyObject == null || dpName == null)
+            {
+                throw new ArgumentNullException(dpName == null ? "dpName" : "dependencyObject");
+            }
             return GetDependencyPropertyByName(dependencyObject.GetType(), dpName);
         }
 
-        public static DependencyProperty GetDependencyPropertyByName(Type dependencyObjectType, string dpName)
+        private static DependencyProperty GetDependencyPropertyByName(Type dependencyObjectType, string dpName)
         {
             DependencyProperty dp = null;
 
@@ -42,14 +46,30 @@ namespace SimpleEdit.Tools
             {
                 dp = fieldInfo.GetValue(null) as DependencyProperty;
             }
+            else
+            {
+                throw new NullReferenceException("GetField returned null where a FieldInfo object was required.");
+            }
 
             return dp;
         }
 
-        public static void SetDependencyProperty(DependencyObject dependencyObject, string propertyName, object value)
+        public static DependencyObject SetDependencyProperty(DependencyObject dependencyObject, string propertyName, object value)
         {
-            DependencyProperty property = GetDependencyPropertyByName(dependencyObject, propertyName);
-            dependencyObject.SetValue(property, value);
+            if (dependencyObject == null || propertyName == null || value == null)
+            {
+                throw new ArgumentNullException((dependencyObject == null ? "dependencyObject" : (propertyName == null ? "propertyName" : "value")));
+            }
+            try
+            {
+                DependencyProperty property = GetDependencyPropertyByName(dependencyObject, propertyName);
+                dependencyObject.SetValue(property, value);
+            }
+            catch (NullReferenceException e)
+            {
+                throw new MissingFieldException(string.Format("The field {0} could not be found as a child of {1}", propertyName, dependencyObject), e);
+            }
+            return dependencyObject;
         }
     }
 }

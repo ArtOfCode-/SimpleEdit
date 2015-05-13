@@ -23,12 +23,20 @@ using System.Threading.Tasks;
 
 namespace SimpleEdit
 {
-    static class ApplicationFiles
+    public static class ApplicationFiles
     {
         public static string UserConfig = "{WorkingPath}\\user.cfg";
 
         public static string GetFilePath(string workingPath, string file)
         {
+            if (workingPath == null || file == null)
+            {
+                throw new ArgumentNullException(file == null ? "file" : "workingPath");
+            }
+            if (!file.Contains("{WorkingPath}"))
+            {
+                throw new ArgumentException("The argument must have a {WorkingPath} replacement locator indicator.", "file");
+            }
             return file.Replace("{WorkingPath}", workingPath);
         }
     }

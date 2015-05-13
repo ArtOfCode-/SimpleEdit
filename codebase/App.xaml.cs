@@ -30,5 +30,12 @@ namespace SimpleEdit
     /// </summary>
     public partial class App : Application
     {
+        public static DateTime StartupTimeStamp;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            StartupTimeStamp = DateTime.Now;
+            base.OnStartup(e);
+        }
     }
 }

@@ -74,7 +74,7 @@ namespace SimpleEdit
             EditMenuControls.Initialize(this);
         }
 
-        void MainWindow_Closing(object sender, CancelEventArgs e)
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             FileMenuControls.Exit(e);
         }
@@ -173,14 +173,12 @@ namespace SimpleEdit
         {
             SetStatusBar("Saving", Colors.DarkOrange);
             FileMenuControls.Save();
-            SetStatusBar("Ready", Colors.DodgerBlue);
         }
 
         private void FileMenuSaveAs_Click(object sender, RoutedEventArgs e)
         {
             SetStatusBar("Saving", Colors.DarkOrange);
             FileMenuControls.SaveAs();
-            SetStatusBar("Ready", Colors.DodgerBlue);
         }
 
         private void FileMenuExit_Click(object sender, RoutedEventArgs e)
@@ -196,7 +194,7 @@ namespace SimpleEdit
 
         public bool ConfirmWithoutSaving(string action)
         {
-            string title = "Confirm Exit";
+            string title = "Confirm Action";
             MessageBoxResult result = MessageBox.Show("You have not saved your work! Are you sure you wish to " + action + " without saving?", title, MessageBoxButton.YesNoCancel);
             if (result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
             {
@@ -279,13 +277,15 @@ namespace SimpleEdit
 
         private void MarkdownMode_Click(object sender, RoutedEventArgs e)
         {
-            if (MDToolMenu.Visibility == Visibility.Collapsed)
+            if (MDToolMenu.Height == 0)
             {
-                MDToolMenu.Visibility = Visibility.Visible;
+                MDToolMenu.Height = 26.00;
+                EditBox.Height = EditBox.Height - 26.00;
             }
             else
             {
-                MDToolMenu.Visibility = Visibility.Collapsed;
+                MDToolMenu.Height = 0.00;
+                EditBox.Height = EditBox.Height + 26.00;
             }
         }
 

@@ -126,12 +126,12 @@ namespace SimpleEdit.Tools
                 {
                     OpenFile.InvokeOpen(args[0]);
                 }
-                else if (args[0] == "--reset")
+                if (args.Contains("--reset"))
                 {
                     File.Delete(ApplicationFiles.GetFilePath(WorkingDirectory, ApplicationFiles.UserConfig));
                     Environment.Exit(0);
                 }
-                else if (args[0] == "--recreate")
+                if (args.Contains("--recreate"))
                 {
                     File.Delete(ApplicationFiles.GetFilePath(WorkingDirectory, ApplicationFiles.UserConfig));
                     _window.Dispatcher.BeginInvoke(new Action(delegate()
@@ -139,7 +139,7 @@ namespace SimpleEdit.Tools
                         SetupFirstRun();
                     }));
                 }
-                else if (args[0] == "--recreate-exit")
+                else if (args.Contains("--recreate-exit"))
                 {
                     File.Delete(ApplicationFiles.GetFilePath(WorkingDirectory, ApplicationFiles.UserConfig));
                     _window.Dispatcher.BeginInvoke(new Action(delegate()
